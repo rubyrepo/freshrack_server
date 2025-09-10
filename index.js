@@ -29,10 +29,8 @@ async function run() {
     const foodCollection = db.collection("foods");
     const notesCollection = db.collection("notes");
 
-    // Root
     app.get("/", (req, res) => res.send("Freshrack server is running"));
 
-    // Add Food
     app.post("/api/foods", async (req, res) => {
       try {
         const food = req.body;
@@ -68,18 +66,18 @@ async function run() {
       }
     });
 
-    // ✅ Get Nearly Expired Foods (within 3 days, not already expired)
+    // Nearly expired foods 
     app.get("/api/foods/nearly-expired", async (req, res) => {
       try {
         const today = new Date();
         const threeDaysLater = new Date();
-        threeDaysLater.setDate(today.getDate() + 3);
+        threeDaysLater.setDate(today.getDate() + 5);
 
         const foods = await foodCollection
           .find({
             expiryDate: {
-              $gte: today.toISOString(), // not expired yet
-              $lte: threeDaysLater.toISOString(), // expiring soon
+              $gte: today.toISOString(), 
+              $lte: threeDaysLater.toISOString(), 
             },
           })
           .toArray();
@@ -108,7 +106,6 @@ async function run() {
       }
     });
 
-    // Add this route to your server file
     app.get("/api/foods/stats", async (req, res) => {
       try {
         const today = new Date();
