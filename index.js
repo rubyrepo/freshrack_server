@@ -6,14 +6,11 @@ require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 
-// MongoDB connection URI
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.by8ms6m.mongodb.net/?retryWrites=true&w=majority`;
 
-// MongoDB client
 const client = new MongoClient(uri, {
   serverApi: { version: ServerApiVersion.v1, strict: true, deprecationErrors: true },
 });
@@ -21,16 +18,15 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     await client.connect();
-    console.log('✅ Connected to MongoDB');
+    console.log('Connected to MongoDB');
 
     const db = client.db('freshRackDB');
     const foodCollection = db.collection('foods');
     const notesCollection = db.collection('notes');
 
-    // Base route
-    app.get('/', (req, res) => res.send('🥶 Freshrack server is running'));
+    app.get('/', (req, res) => res.send('Freshrack server is running'));
 
-    // ➡️ Add Food
+    // Add Food
     app.post('/api/foods', async (req, res) => {
       try {
         const food = req.body;
@@ -42,7 +38,7 @@ async function run() {
       }
     });
 
-    // ✅ Enhanced GET: All foods with search + category filter
+    // Enhanced GET: All foods with search + category filter
     app.get('/api/foods', async (req, res) => {
       try {
         const { search, category } = req.query;
@@ -66,7 +62,7 @@ async function run() {
       }
     });
 
-    // ✅ GET foods by user email
+    // GET foods by user email
     app.get('/api/foods/user/:email', async (req, res) => {
       try {
         const userEmail = req.params.email;
@@ -77,7 +73,7 @@ async function run() {
       }
     });
 
-    // ✅ GET single food by id
+    // GET single food by id
     app.get('/api/foods/:id', async (req, res) => {
       try {
         const id = req.params.id;
@@ -89,7 +85,7 @@ async function run() {
       }
     });
 
-    // ✅ Update food
+    // Update food
     app.put('/api/foods/:id', async (req, res) => {
       try {
         const id = req.params.id;
@@ -106,7 +102,7 @@ async function run() {
       }
     });
 
-    // ✅ Delete food
+    // Delete food
     app.delete('/api/foods/:id', async (req, res) => {
       try {
         const id = req.params.id;
@@ -119,7 +115,7 @@ async function run() {
       }
     });
 
-    // ✅ Notes for food
+    // Notes for food
     app.get('/api/foods/:id/notes', async (req, res) => {
       try {
         const foodId = req.params.id;
